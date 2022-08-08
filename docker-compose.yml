@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  app_crawler_linkedin_jobs_server:
+    build:
+      args:
+        user: root
+      context: ./services/web
+      dockerfile: Dockerfile
+    working_dir: /var/www/
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/var/www/
+    env_file:
+      - ./.env
+    networks:
+      - docker_crawler_linkedin_jobs_server
+
+  app_crawler_linkedin_jobs_nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - app_crawler_linkedin_jobs_server
+    volumes:
+      - ./services/nginx:/etc/nginx/conf.d/
+    networks:
+      - docker_crawler_linkedin_jobs_server
+
+  app_crawler_linkedin_jobs_airflow:
+    build:
+      context: ./services/airflow
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./services/airflow:/opt/airflow/dags/
+    # entrypoint: ./services/airflow/entrypoint.sh
+    networks:
+      - docker_crawler_linkedin_jobs_server
+
+networks:
+  docker_crawler_linkedin_jobs_server:
+    driver: bridge

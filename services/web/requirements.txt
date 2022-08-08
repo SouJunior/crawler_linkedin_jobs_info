@@ -1,0 +1,4 @@
+# bs4
+# selenium
+Flask==2.2.0
+python-dotenv
