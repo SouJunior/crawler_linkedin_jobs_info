@@ -2,35 +2,42 @@ version: '3'
 
 services:
   app_crawler_linkedin_jobs_server:
+    container_name: app_crawler_linkedin_jobs_server
     build:
       args:
         user: root
       context: ./services/web
       dockerfile: Dockerfile
     working_dir: /var/www/
+    restart: always
     ports:
       - 5000:5000
     volumes:
-      - ./:/var/www/
+      - ./services/web/:/var/www/
     env_file:
       - ./.env
     networks:
       - docker_crawler_linkedin_jobs_server
 
   app_crawler_linkedin_jobs_nginx:
+    container_name: app_crawler_linkedin_jobs_nginx
     build:
       context: ./services/nginx
       dockerfile: Dockerfile
+    restart: always
     ports:
       - 80:80
     depends_on:
       - app_crawler_linkedin_jobs_server
     volumes:
-      - ./services/nginx:/etc/nginx/conf.d/
+      - ./services/nginx/:/etc/nginx/conf.d/
+    external_links:
+      - app_crawler_linkedin_jobs_server
     networks:
       - docker_crawler_linkedin_jobs_server
 
   app_crawler_linkedin_jobs_airflow:
+    container_name: app_crawler_linkedin_jobs_airflow
     build:
       context: ./services/airflow
       dockerfile: Dockerfile

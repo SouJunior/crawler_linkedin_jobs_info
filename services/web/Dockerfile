@@ -26,16 +26,12 @@ WORKDIR /var/www
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# copy project
-COPY . /var/www/
-
 # install dependencies
-RUN pip install -r $PWD/requirements.txt
+COPY ./requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
-ENV FLASK_APP __init__.py
-
-EXPOSE 5000
-
-CMD ["python", "-m", "flask", "run"]
+# ENV FLASK_APP __init__.py
 
 USER $user
+
+CMD ["python", "-m", "flask", "run"]
