@@ -1,8 +1,17 @@
 # pull official base image
-FROM python:3.9.5-slim-buster
+FROM python:3.8.2-alpine
+
+RUN apk add --virtual .build-dependencies \
+            --no-cache \
+            python3-dev \
+            build-base \
+            linux-headers \
+            pcre-dev
+
+RUN apk add --no-cache pcre
 
 # install system dependencies
-RUN apt-get update
+#RUN apt-get update
 
 # install system dependencies
 # RUN apt-get update \
@@ -19,19 +28,22 @@ RUN apt-get update
 # RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
 # RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
-# set work directory
-WORKDIR /var/www
-
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install dependencies
-COPY ./requirements.txt requirements.txt
+COPY . /app
+
+WORKDIR /app
+
 RUN pip install -r requirements.txt
 
-# ENV FLASK_APP __init__.py
+RUN apk del .build-dependencies && rm -rf /var/cache/apk/*
 
 USER $user
 
-CMD ["python", "-m", "flask", "run"]
+EXPOSE 5000
+
+# CMD ["python", "-m", "flask", "run"]
+CMD ["uwsgi", "--ini", "wsgi.ini"]

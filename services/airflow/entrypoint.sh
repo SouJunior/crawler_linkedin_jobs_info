@@ -1,6 +1,8 @@
 #!/bin/bash
 
-#airflow db init
-#airflow users create --username admin --password admin --firstname SouJunior --role Admin
-#airflow webserver
-#airflow scheduler
+airflow webserver
+
+# airflow users create --username $AIRFLOW_USERNAME --password $AIRFLOW_PASSWORD --firstname $AIRFLOW_FIRSTNAME --role $AIRFLOW_ROLE
+
+# airflow db init
+# airflow scheduler

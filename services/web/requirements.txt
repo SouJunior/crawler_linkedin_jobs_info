@@ -1,4 +1,4 @@
 # bs4
 # selenium
-Flask==2.2.0
-python-dotenv
+Flask==2.2.2
+uwsgi
