@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  app_crawler_linkedin_jobs_nginx:
+    container_name: "app_crawler_linkedin_jobs_nginx"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./config:/etc/nginx/conf.d/
+
+networks:
+  default:
+    external:
+      name: docker_linkedin_jobs

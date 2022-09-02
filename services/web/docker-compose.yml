@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  app_crawler_linkedin_jobs_server:
+    container_name: "app_crawler_linkedin_jobs_server"
+    build:
+      args:
+        user: root
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5000:5000
+    env_file:
+      - ./.env
+    volumes:
+      - ./:/app
+
+networks:
+  default:
+    external:
+      name: docker_linkedin_jobs
